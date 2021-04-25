@@ -1,7 +1,6 @@
-#include <iostream>
+#include <Operations.hpp>
 
-int main () {
-    std::cout << "qweq";
+int main() {
+
     return 0;
-    
 }
