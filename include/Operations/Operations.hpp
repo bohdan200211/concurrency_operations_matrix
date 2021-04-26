@@ -12,15 +12,15 @@ public:
 
 
     //The naive implementation
-    static Number NaiveSquare (const Number & lhs, const Number & rhs);
+    static Number NaiveSquare (const Number & num);
 
-    static Number NaivePow (const Number & lhs, const Number & rhs);
+    static Number NaivePow (const Number & base, const Number & exponent);
 
 
     //The Fast implementation
-    static Number FastSquare (const Number & lhs, const Number & rhs);
+    static Number FastSquare (const Number & num);
 
-    static Number FastPow (const Number & lhs, const Number & rhs);
+    static Number FastPow (const Number & base, const Number & exponent);
 
 
     //The Concurrency implementation
