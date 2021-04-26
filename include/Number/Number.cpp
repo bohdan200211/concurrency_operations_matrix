@@ -2,11 +2,9 @@
 // Created by Bohdan on 2021-04-25.
 //
 
-#include <regex>
-
 #include "Number.hpp"
 
-Number::Number()
+Number::Number() noexcept
     : m_Length(1)
     , m_Number({0}) {}
 
@@ -24,20 +22,16 @@ Number::Number(const std::string & str)
     } else if (str == "0") {
         m_Number[0] = 0;
     } else {
-        //TODO добавити exception
-        std::cerr << "Could not create instance of number: " << str << std::endl;
+        throw std::runtime_error("Could not create instance of number");
     }
 }
 
-void Number::Resize(size_t size) {
-    if (size < 1) {
-        std::cerr << "size < 1" << std::endl;
-    }
+void Number::Resize(size_t size) noexcept {
     m_Number.resize(size, 0);
     m_Length = size;
 }
 
-std::string Number::ToString() const {
+std::string Number::ToString() const noexcept {
     std::string result(m_Length, '.');
 
     for (size_t str_it = 0, num_it = m_Length - 1; str_it < m_Length; str_it++, num_it--) {
@@ -47,15 +41,13 @@ std::string Number::ToString() const {
     return result;
 }
 
-std::ostream & operator <<(std::ostream & ostream, const Number & number) {
+std::ostream & operator <<(std::ostream & ostream, const Number & number) noexcept {
     return ostream << number.ToString();
 }
 
 Number &Number::operator--() {
     if (m_Length == 1 && m_Number[0] == 0) {
-        //TODO добавити exception
-        std::cerr << "The Number field work only in the field of natural numbers" << std::endl;
-        return *this;
+        throw std::runtime_error("The Number field work only in the field of natural numbers");
     }
 
     int8_t carry = 1;
@@ -79,7 +71,7 @@ Number &Number::operator--() {
     return *this;
 }
 
-Number &Number::operator++() {
+Number &Number::operator++() noexcept {
     int8_t carry = 1;
 
     for (size_t it = 0; it < m_Length && carry; ++it) {
@@ -98,7 +90,7 @@ Number &Number::operator++() {
     return *this;
 }
 
-void Number::Update() {
+void Number::Update() noexcept {
     size_t ActualLength = m_Number.size();
     while (ActualLength > 1 && m_Number[ActualLength - 1] == 0) {
         --ActualLength;
@@ -107,31 +99,31 @@ void Number::Update() {
     Resize(ActualLength);
 }
 
-bool Number::operator<(const Number & number) const {
+bool Number::operator<(const Number & number) const noexcept {
     return ComparisonResult(number) == Number::ComparisonSign::Less;
 }
 
-bool Number::operator>(const Number & number) const {
+bool Number::operator>(const Number & number) const noexcept {
     return ComparisonResult(number) == Number::ComparisonSign::Greater;
 }
 
-bool Number::operator==(const Number & number) const {
+bool Number::operator==(const Number & number) const noexcept {
     return ComparisonResult(number) == Number::ComparisonSign::Equality;
 }
 
-bool Number::operator!=(const Number & number) const {
+bool Number::operator!=(const Number & number) const noexcept {
     return ComparisonResult(number) != Number::ComparisonSign::Equality;
 }
 
-bool Number::operator<=(const Number & number) const {
+bool Number::operator<=(const Number & number) const noexcept {
     return ComparisonResult(number) != Number::ComparisonSign::Greater;
 }
 
-bool Number::operator>=(const Number & number) const {
+bool Number::operator>=(const Number & number) const noexcept {
     return ComparisonResult(number) != Number::ComparisonSign::Less;
 }
 
-Number::ComparisonSign Number::ComparisonResult(const Number & number) const {
+Number::ComparisonSign Number::ComparisonResult(const Number & number) const noexcept {
     if (m_Length == number.m_Length) {
         for (size_t i = m_Length; i > 0; i--) {
             if (m_Number[i - 1] < number.m_Number[i - 1]) {
@@ -148,7 +140,7 @@ Number::ComparisonSign Number::ComparisonResult(const Number & number) const {
     }
 }
 
-void Number::NumberDivByTwo() {
+void Number::NumberDivByTwo() noexcept {
     m_Number[0] /= 2;
     for (size_t i = 1; i < m_Length; i++) {
         bool isNotDivByTwo = m_Number[i] % 2;
