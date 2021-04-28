@@ -11,7 +11,7 @@ void MatrixOperations::Addition (SquareMatrix & output,
                                  const SquareMatrix & B) {
 
     if (A.GetDimension() != B.GetDimension()) {
-        throw std::runtime_error("A and B dimensions are not equal");
+        throw std::runtime_error("A and B dimensions are not equal(14)");
     }
 
     const int n = A.GetDimension();
@@ -29,7 +29,7 @@ void MatrixOperations::Subtraction (SquareMatrix & output,
                                     const SquareMatrix & B) {
 
     if (A.GetDimension() != B.GetDimension()) {
-        throw std::runtime_error("A and B dimensions are not equal");
+        throw std::runtime_error("A and B dimensions are not equal(32)");
     }
 
     const int n = A.GetDimension();
@@ -47,7 +47,7 @@ void MatrixOperations::BruteForceMultiplication (SquareMatrix & output,
                                                  const SquareMatrix & B) {
 
     if (A.GetDimension() != B.GetDimension()) {
-        throw std::runtime_error("A and B dimensions are not equal");
+        throw std::runtime_error("A and B dimensions are not equal(50)");
     }
 
     const int n = A.GetDimension();
@@ -70,7 +70,7 @@ void MatrixOperations::MultiThreadsAddition (size_t AmountOfThreads, SquareMatri
 
     if (A.GetDimension() != B.GetDimension()) {
 //        return;
-        throw std::runtime_error("A and B dimensions are not equal");
+        throw std::runtime_error("A and B dimensions are not equal(73)");
     }
 
     const int n = A.GetDimension();
@@ -96,8 +96,7 @@ void MatrixOperations::MultiThreadsAddition (size_t AmountOfThreads, SquareMatri
     for (size_t i = 0, StartPos = 0, EndPos = StartPos; i < OptimalAmountOfThreads; ++i) {
         EndPos += Intervals[i];
 
-        ArrOfThreads[i] = std::thread(OneThreadAddition,std::ref(output), A, B, StartPos, EndPos);
-
+        ArrOfThreads[i] = std::thread(OneThreadAddition, std::ref(output), A, B, StartPos, EndPos);
 //        OneThreadAddition(output, A, B, StartPos, EndPos);
 
         StartPos = EndPos;
@@ -143,7 +142,7 @@ void MatrixOperations::PrintSquareMatrix (const SquareMatrix & mtrx) {
 bool MatrixOperations::CheckEquality(const SquareMatrix & A,
                                      const SquareMatrix & B) {
     if (A.GetDimension() != B.GetDimension()) {
-        throw std::runtime_error("A and B dimensions are not equal");
+        throw std::runtime_error("A and B dimensions are not equal(146)");
     }
 
     for (size_t i = 0; i < A.GetDimension(); ++i) {
@@ -168,7 +167,7 @@ void MatrixOperations::OneThreadAddition(SquareMatrix & output,
 
     for (size_t i = StartRow; i < EndRow; ++i) {
         for (size_t j = 0; j < n; ++j) {
-            output(i, j) = A.f(i, j) + B.f(i, j);
+            output(i, j) = A(i, j) + B(i, j);
         }
     }
 }

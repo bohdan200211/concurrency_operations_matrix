@@ -34,7 +34,7 @@ public:
         if (!mtrx.empty()) {
             for (size_t i = 0; i < m_Dimension; ++i) {
                 if (m_Dimension != mtrx[i].size()) {
-                    throw std::runtime_error("This is not a square matrix");
+                    throw std::runtime_error("This is not a square matrix(37)");
                 }
             }
         }
@@ -114,7 +114,7 @@ private:
     static void OneThreadAddition (SquareMatrix & output,
                                    const SquareMatrix & A,
                                    const SquareMatrix & B,
-                                   size_t StartPos, size_t EndPos);
+                                   size_t StartRow, size_t EndRow);
 };
 
 
