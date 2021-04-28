@@ -91,10 +91,8 @@ public:
                                           const SquareMatrix & B);
 
     //The MultiThreads implementation
-    template<size_t AmountOfThreads>
-    static void MultiThreadsAddition (SquareMatrix & output,
-                                    const SquareMatrix & A,
-                                    const SquareMatrix & B);
+    static void MultiThreadsAddition (size_t AmountOfThreads, SquareMatrix & output,
+                                      const SquareMatrix & A, const SquareMatrix & B);
 
     template<size_t AmountOfThreads>
     static void MultiThreadsSubtraction (SquareMatrix & output,

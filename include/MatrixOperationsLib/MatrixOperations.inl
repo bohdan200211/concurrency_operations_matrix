@@ -65,37 +65,42 @@ void MatrixOperations::BruteForceMultiplication (SquareMatrix & output,
 
 
 //**************************************The MultiThreads implementation**************************************
-template<size_t AmountOfThreads>
-void MatrixOperations::MultiThreadsAddition (SquareMatrix & output,
-                                            const SquareMatrix & A,
-                                            const SquareMatrix & B) {
+void MatrixOperations::MultiThreadsAddition (size_t AmountOfThreads, SquareMatrix & output,
+                                             const SquareMatrix & A, const SquareMatrix & B) {
 
     if (A.GetDimension() != B.GetDimension()) {
+//        return;
         throw std::runtime_error("A and B dimensions are not equal");
     }
 
     const int n = A.GetDimension();
     output.Resize(n);
 
-    size_t AmountOfCells          = output.GetDimension() * output.GetDimension();
-    size_t OptimalAmountOfThreads = std::min(AmountOfCells, AmountOfThreads);
-    size_t TheadInterval          = (AmountOfCells % OptimalAmountOfThreads
-                                    ? AmountOfCells / OptimalAmountOfThreads + 1
-                                    : AmountOfCells / OptimalAmountOfThreads);
+    size_t AmountOfRows           = output.GetDimension();
+    size_t OptimalAmountOfThreads = std::min(AmountOfRows, AmountOfThreads);
+    size_t ThreadInterval         = AmountOfRows / OptimalAmountOfThreads;
+    size_t ThreadRemainder        = AmountOfRows % OptimalAmountOfThreads;
+
+    size_t Intervals[OptimalAmountOfThreads];
+
+    for (auto & x : Intervals) {
+        x = ThreadInterval;
+    }
+    for (size_t i = 0; i < ThreadRemainder; ++i) {
+        Intervals[i]++;
+    }
+
 
 
     std::thread ArrOfThreads[OptimalAmountOfThreads];
-    for (size_t i = 0, StartOfCurrInterval = 0; i < OptimalAmountOfThreads; ++i) {
-        size_t EndOfCurrInterval = StartOfCurrInterval
-                                   + (StartOfCurrInterval + TheadInterval <= AmountOfCells
-                                     ? TheadInterval
-                                     : AmountOfCells % TheadInterval + 1);
+    for (size_t i = 0, StartPos = 0, EndPos = StartPos; i < OptimalAmountOfThreads; ++i) {
+        EndPos += Intervals[i];
 
-        ArrOfThreads[i] = std::thread(OneThreadAddition,std::ref(output), A, B, StartOfCurrInterval, EndOfCurrInterval);
+        ArrOfThreads[i] = std::thread(OneThreadAddition,std::ref(output), A, B, StartPos, EndPos);
 
-//        OneThreadAddition(output, A, B, StartOfCurrInterval, EndOfCurrInterval);
+//        OneThreadAddition(output, A, B, StartPos, EndPos);
 
-        StartOfCurrInterval = EndOfCurrInterval;
+        StartPos = EndPos;
     }
 
 
@@ -155,34 +160,16 @@ bool MatrixOperations::CheckEquality(const SquareMatrix & A,
 void MatrixOperations::OneThreadAddition(SquareMatrix & output,
                                         const SquareMatrix & A,
                                         const SquareMatrix & B,
-                                        size_t StartPos, size_t EndPos) {
+                                        size_t StartRow, size_t EndRow) {
 
 
     const size_t n = output.GetDimension();
 
 
-    size_t UpperRow         = StartPos / n;
-    size_t EndRow           = EndPos / n;
-    size_t UpperRightColumn = (UpperRow == EndRow
-                              ? EndPos % n
-                              : n);
-    size_t EndRightColumn   = EndPos % n;
-
-    for (size_t j = StartPos % n; j < UpperRightColumn; ++j) {
-        output(UpperRow, j) = A.f(UpperRow, j) + B.f(UpperRow, j);
-    }
-
-    for (size_t i = UpperRow + 1; i < EndRow; ++i) {
+    for (size_t i = StartRow; i < EndRow; ++i) {
         for (size_t j = 0; j < n; ++j) {
             output(i, j) = A.f(i, j) + B.f(i, j);
         }
-    }
-
-    if (EndRow == n)
-        return;
-
-    for (size_t j = 0; j < EndRightColumn; ++j) {
-        output(EndRow, j) = A.f(EndRow, j) + B.f(EndRow, j);
     }
 }
 
