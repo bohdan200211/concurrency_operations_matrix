@@ -1,20 +1,32 @@
 #include <thread>
-#include <chrono>
+#include <string>
 
-#include <Operations.hpp>
+#include <MatrixOperations.hpp>
 
 int main() {
-    Number n1("21");
-    Number n2("53");
-//    Number n3("7123");
+    SquareMatrix result;
+
+    SquareMatrix A({
+                           {1, 2},
+                           {3, 4}
+                   });
+
+    SquareMatrix B({
+                           {5, 6},
+                           {7, 8}
+                   });
 
 
-    Number MultRes = Operations::ConcurrencyMultiplication<2>(n1, n2);
-//    Number SquareRes = Operations::FastSquare(n1);
-//    Number PowResult = Operations::FastPow(n2, n1);
+
+    MatrixOperations::Sum(result, A, B);
 
 
-    std::cout << /*PowResult*/MultRes/*SquareRes*/ << std::endl;
 
+
+    //*******************************************TABLE********************************************
+    MatrixOperations::PrintSquareMatrix(A);
+    MatrixOperations::PrintSquareMatrix(B);
+    MatrixOperations::PrintSquareMatrix(result);
+    //*******************************************/TABLE********************************************
     return 0;
 }

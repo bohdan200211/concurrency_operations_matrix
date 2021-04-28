@@ -1,6 +1,6 @@
 file(GLOB SOURCE_FILES
         *.cpp)
 
-add_executable(Main ${SOURCE_FILES})
+add_executable(MyMain ${SOURCE_FILES})
 
-target_link_libraries(Main PRIVATE NumberOperationsLib)
+target_link_libraries(MyMain PRIVATE MatrixOperationsLib)
