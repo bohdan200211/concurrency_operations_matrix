@@ -78,45 +78,27 @@ public:
 class MatrixOperations {
 public:
     //The OneThread implementation
-    static void Addition (SquareMatrix & output,
-                          const SquareMatrix & A,
-                          const SquareMatrix & B);
+    static void Addition (SquareMatrix & output, const SquareMatrix & A, const SquareMatrix & B);
 
-    static void Subtraction (SquareMatrix & output,
-                             const SquareMatrix & A,
-                             const SquareMatrix & B);
-
-    static void BruteForceMultiplication (SquareMatrix & output,
-                                          const SquareMatrix & A,
-                                          const SquareMatrix & B);
+    static void BruteForceMultiplication (SquareMatrix & output, const SquareMatrix & A, const SquareMatrix & B);
 
     //The MultiThreads implementation
     static void MultiThreadsAddition (size_t AmountOfThreads, SquareMatrix & output,
                                       const SquareMatrix & A, const SquareMatrix & B);
 
-    template<size_t AmountOfThreads>
-    static void MultiThreadsSubtraction (SquareMatrix & output,
-                                         const SquareMatrix & A,
-                                         const SquareMatrix & B);
-
-    template<size_t AmountOfThreads>
-    static void MultiThreadsBruteForceMultiplication (SquareMatrix & output,
-                                                      const SquareMatrix & A,
-                                                      const SquareMatrix & B);
+    static void MultiThreadsBruteForceMultiplication (size_t AmountOfThreads, SquareMatrix & output,
+                                                      const SquareMatrix & A, const SquareMatrix & B);
 
 
     static void PrintSquareMatrix (const SquareMatrix & mtrx);
 
-    static bool CheckEquality (const SquareMatrix & A,
-                               const SquareMatrix & B);
+    static bool CheckEquality (const SquareMatrix & A, const SquareMatrix & B);
 
 private:
-    static void OneThreadAddition (SquareMatrix & output,
-                                   const SquareMatrix & A,
-                                   const SquareMatrix & B,
+    static void OneThreadAddition (SquareMatrix & output, const SquareMatrix & A, const SquareMatrix & B,
+                                   size_t StartRow, size_t EndRow);
+
+    static void MultiThreadAddition (SquareMatrix & output, const SquareMatrix & A, const SquareMatrix & B,
                                    size_t StartRow, size_t EndRow);
 };
 
-
-
-#include "MatrixOperations.inl"
