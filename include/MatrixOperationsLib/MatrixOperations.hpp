@@ -8,6 +8,7 @@
 #include <thread>
 #include <vector>
 #include <iostream>
+
 #include <fort.hpp>
 
 
@@ -22,22 +23,42 @@ private:
 
 
 public:
-    SquareMatrix() 
+    SquareMatrix()
         : m_Matrix()
         , m_Dimension(0) {}
-        
+
     explicit SquareMatrix(const mtrx_representation & mtrx)
         : m_Matrix(mtrx)
         , m_Dimension(mtrx.size()) {
 
-        if (!mtrx.empty() && mtrx.size() != mtrx[0].size()) {
-            throw std::runtime_error("This is not a square matrix");
+        if (!mtrx.empty()) {
+            for (size_t i = 0; i < m_Dimension; ++i) {
+                if (m_Dimension != mtrx[i].size()) {
+                    throw std::runtime_error("This is not a square matrix");
+                }
+            }
+        }
+    }
+
+    explicit SquareMatrix(const size_t dimension, IntegerType (*SomeFunction)(IntegerType, IntegerType))
+        : m_Dimension(0) {
+
+        Resize(dimension);
+
+        for (size_t i = 0; i < m_Dimension; ++i) {
+            for (size_t j = 0; j < m_Dimension; ++j) {
+                m_Matrix[i][j] = SomeFunction(i, j);
+            }
         }
     }
 
 
           IntegerType & operator()(IntegerType idx, IntegerType idy)       { return m_Matrix[idx][idy]; }
     const IntegerType & operator()(IntegerType idx, IntegerType idy) const { return m_Matrix[idx][idy]; }
+
+    IntegerType f(IntegerType idx, IntegerType idy) const { return m_Matrix[idx][idy]; }
+
+
 
     [[nodiscard]] row::const_iterator begin(size_t id_row) const noexcept { return m_Matrix[id_row].begin(); }
     [[nodiscard]] row::const_iterator end(size_t id_row) const noexcept { return m_Matrix[id_row].begin(); }
@@ -57,13 +78,13 @@ public:
 class MatrixOperations {
 public:
     //The OneThread implementation
-    static void Sum (SquareMatrix & output,
-                    const SquareMatrix & A,
-                    const SquareMatrix & B);
+    static void Addition (SquareMatrix & output,
+                          const SquareMatrix & A,
+                          const SquareMatrix & B);
 
-    static void Sub (SquareMatrix & output,
-                      const SquareMatrix & A,
-                      const SquareMatrix & B);
+    static void Subtraction (SquareMatrix & output,
+                             const SquareMatrix & A,
+                             const SquareMatrix & B);
 
     static void BruteForceMultiplication (SquareMatrix & output,
                                           const SquareMatrix & A,
@@ -71,21 +92,31 @@ public:
 
     //The MultiThreads implementation
     template<size_t AmountOfThreads>
-    static void MultiThreadsSum (SquareMatrix & output,
-                                 const SquareMatrix & A,
-                                 const SquareMatrix & B);
+    static void MultiThreadsAddition (SquareMatrix & output,
+                                    const SquareMatrix & A,
+                                    const SquareMatrix & B);
 
     template<size_t AmountOfThreads>
-    static void MultiThreadsSub (SquareMatrix & output,
-                                 const SquareMatrix & A,
-                                 const SquareMatrix & B);
+    static void MultiThreadsSubtraction (SquareMatrix & output,
+                                         const SquareMatrix & A,
+                                         const SquareMatrix & B);
 
     template<size_t AmountOfThreads>
     static void MultiThreadsBruteForceMultiplication (SquareMatrix & output,
                                                       const SquareMatrix & A,
                                                       const SquareMatrix & B);
 
+
     static void PrintSquareMatrix (const SquareMatrix & mtrx);
+
+    static bool CheckEquality (const SquareMatrix & A,
+                               const SquareMatrix & B);
+
+private:
+    static void OneThreadAddition (SquareMatrix & output,
+                                   const SquareMatrix & A,
+                                   const SquareMatrix & B,
+                                   size_t StartPos, size_t EndPos);
 };
 
 
