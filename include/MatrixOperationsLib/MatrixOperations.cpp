@@ -21,7 +21,7 @@ void MatrixOperations::Addition (SquareMatrix & output, const SquareMatrix & A, 
     }
 }
 
-void MatrixOperations::BruteForceMultiplication (SquareMatrix & output, const SquareMatrix & A, const SquareMatrix & B) {
+void MatrixOperations::Multiplication (SquareMatrix & output, const SquareMatrix & A, const SquareMatrix & B) {
 
     if (A.GetDimension() != B.GetDimension()) {
         throw std::runtime_error("A and B dimensions are not equal(50)");
@@ -92,7 +92,7 @@ void MatrixOperations::MultiThreadsAddition (size_t AmountOfThreads, SquareMatri
     }
 }
 
-void MatrixOperations::MultiThreadsBruteForceMultiplication (size_t AmountOfThreads, SquareMatrix & output,
+void MatrixOperations::MultiThreadsMultiplication (size_t AmountOfThreads, SquareMatrix & output,
                                                              const SquareMatrix & A, const SquareMatrix & B) {
 
     if (A.GetDimension() != B.GetDimension()) {
@@ -126,13 +126,13 @@ void MatrixOperations::MultiThreadsBruteForceMultiplication (size_t AmountOfThre
     for (;i < OptimalAmountOfThreads - 1; ++i) {
         EndPos += Intervals[i];
 
-        ArrOfThreads[i] = std::thread(MultiThreadAddition, std::ref(output), std::cref(A), std::cref(B), StartPos, EndPos);
+        ArrOfThreads[i] = std::thread(OneThreadMultiplication, std::ref(output), std::cref(A), std::cref(B), StartPos, EndPos);
 
         StartPos = EndPos;
     }
 
     EndPos += Intervals[OptimalAmountOfThreads - 1];
-    MultiThreadAddition(output, A, B, StartPos, EndPos);
+    OneThreadMultiplication(std::ref(output), std::cref(A), std::cref(B), StartPos, EndPos);
 
 
     for (auto & th : ArrOfThreads) {
@@ -155,7 +155,7 @@ void MatrixOperations::OneThreadAddition(SquareMatrix & output, const SquareMatr
     }
 }
 
-void MatrixOperations::MultiThreadAddition(SquareMatrix &output, const SquareMatrix &A, const SquareMatrix &B,
+void MatrixOperations::OneThreadMultiplication(SquareMatrix &output, const SquareMatrix &A, const SquareMatrix &B,
                                            size_t StartRow, size_t EndRow) {
 
     const size_t n = output.GetDimension();

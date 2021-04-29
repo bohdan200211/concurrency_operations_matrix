@@ -24,12 +24,12 @@ private:
 
 public:
     SquareMatrix()
-        : m_Matrix()
-        , m_Dimension(0) {}
+            : m_Matrix()
+            , m_Dimension(0) {}
 
     explicit SquareMatrix(const mtrx_representation & mtrx)
-        : m_Matrix(mtrx)
-        , m_Dimension(mtrx.size()) {
+            : m_Matrix(mtrx)
+            , m_Dimension(mtrx.size()) {
 
         if (!mtrx.empty()) {
             for (size_t i = 0; i < m_Dimension; ++i) {
@@ -40,8 +40,14 @@ public:
         }
     }
 
+    /// <summary>
+/// Constructor. It construct the matrix of dimension=("dimension" * "dimension")
+/// and set the value of each cell(i, j) = SomeFunction(i, j)
+/// </summary>
+/// <param name="dimension">Obviously...</param>
+/// <param name="IntegerType (*SomeFunction)(IntegerType, IntegerType)">The initial value of parameter(array.size)</param>
     explicit SquareMatrix(const size_t dimension, IntegerType (*SomeFunction)(IntegerType, IntegerType))
-        : m_Dimension(0) {
+            : m_Dimension(0) {
 
         Resize(dimension);
 
@@ -52,18 +58,9 @@ public:
         }
     }
 
-
-          IntegerType & operator()(IntegerType idx, IntegerType idy)       { return m_Matrix[idx][idy]; }
+    IntegerType & operator()(IntegerType idx, IntegerType idy)       { return m_Matrix[idx][idy]; }
     const IntegerType & operator()(IntegerType idx, IntegerType idy) const { return m_Matrix[idx][idy]; }
 
-    IntegerType f(IntegerType idx, IntegerType idy) const { return m_Matrix[idx][idy]; }
-
-
-
-    [[nodiscard]] row::const_iterator begin(size_t id_row) const noexcept { return m_Matrix[id_row].begin(); }
-    [[nodiscard]] row::const_iterator end(size_t id_row) const noexcept { return m_Matrix[id_row].begin(); }
-
-    //work only with std::vector
     void Resize(size_t n) {
         if (m_Dimension != n) {
             m_Matrix.resize(n, std::vector<IntegerType>(n, 0));
@@ -78,15 +75,27 @@ public:
 class MatrixOperations {
 public:
     //The OneThread implementation
+    /// <summary>
+    /// Simple implementation of an algorithm for matrix addition. output = A + B
+    /// </summary>
     static void Addition (SquareMatrix & output, const SquareMatrix & A, const SquareMatrix & B);
 
-    static void BruteForceMultiplication (SquareMatrix & output, const SquareMatrix & A, const SquareMatrix & B);
+    /// <summary>
+    /// Similar to Addition()
+    /// </summary>
+    static void Multiplication (SquareMatrix & output, const SquareMatrix & A, const SquareMatrix & B);
 
     //The MultiThreads implementation
+    /// <summary>
+    /// Function divides rows between threads evenly and run OneThreadAddition() for each of them
+    /// </summary>
     static void MultiThreadsAddition (size_t AmountOfThreads, SquareMatrix & output,
                                       const SquareMatrix & A, const SquareMatrix & B);
 
-    static void MultiThreadsBruteForceMultiplication (size_t AmountOfThreads, SquareMatrix & output,
+    /// <summary>
+    /// Similar to MultiThreadsAddition()
+    /// </summary>
+    static void MultiThreadsMultiplication (size_t AmountOfThreads, SquareMatrix & output,
                                                       const SquareMatrix & A, const SquareMatrix & B);
 
 
@@ -95,10 +104,16 @@ public:
     static bool CheckEquality (const SquareMatrix & A, const SquareMatrix & B);
 
 private:
+    /// <summary>
+    /// Function executes Addition() on the interval of rows. [StartRow, EndRow)
+    /// </summary>
     static void OneThreadAddition (SquareMatrix & output, const SquareMatrix & A, const SquareMatrix & B,
                                    size_t StartRow, size_t EndRow);
 
-    static void MultiThreadAddition (SquareMatrix & output, const SquareMatrix & A, const SquareMatrix & B,
+    /// <summary>
+    /// Similar to OneThreadAddition()
+    /// </summary>
+    static void OneThreadMultiplication (SquareMatrix & output, const SquareMatrix & A, const SquareMatrix & B,
                                    size_t StartRow, size_t EndRow);
 };
 

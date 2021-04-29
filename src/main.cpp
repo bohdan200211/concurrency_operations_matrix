@@ -7,7 +7,7 @@ int main() try {
     SquareMatrix OneThreadResult;
     SquareMatrix MultiThreadResult;
 
-    const size_t n               = 1000;
+    const size_t n               = std::pow(2,13);
     const size_t AmountOfThreads = 8;
 
     SquareMatrix A(n,
@@ -21,12 +21,12 @@ int main() try {
 
 
     auto t1 = std::chrono::high_resolution_clock::now();
-    MatrixOperations::BruteForceMultiplication(OneThreadResult, A, B);
+    MatrixOperations::Addition(OneThreadResult, A, B);
     auto t2 = std::chrono::high_resolution_clock::now();
     auto dur1 = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
     t1 = std::chrono::high_resolution_clock::now();
-    MatrixOperations::MultiThreadsBruteForceMultiplication(AmountOfThreads, MultiThreadResult, A, B);
+    MatrixOperations::MultiThreadsAddition(AmountOfThreads, MultiThreadResult, A, B);
     t2 = std::chrono::high_resolution_clock::now();
     auto dur2 = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 

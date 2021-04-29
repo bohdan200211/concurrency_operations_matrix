@@ -45,7 +45,7 @@ int main() try {
         MultiThreadResult.Resize(N);
 
         auto t1 = std::chrono::high_resolution_clock::now();
-        MatrixOperations::BruteForceMultiplication(OneThreadResult, A, B);
+        MatrixOperations::Multiplication(OneThreadResult, A, B);
         auto t2 = std::chrono::high_resolution_clock::now();
         auto dur = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
         table[j][1] = std::to_string(dur.count());
@@ -53,7 +53,7 @@ int main() try {
 
         for (size_t AmountOfThreads = MinThreads; AmountOfThreads <= MaxThreads; ++AmountOfThreads) {
             t1 = std::chrono::high_resolution_clock::now();
-            MatrixOperations::MultiThreadsBruteForceMultiplication(AmountOfThreads, MultiThreadResult, A, B);
+            MatrixOperations::MultiThreadsMultiplication(AmountOfThreads, MultiThreadResult, A, B);
             t2 = std::chrono::high_resolution_clock::now();
             dur = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
             table[j][AmountOfThreads] = std::to_string(dur.count());
